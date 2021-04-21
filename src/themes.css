@@ -1,0 +1,50 @@
+@media (prefers-color-scheme: dark) {
+    body { background:  #333; color: white; }
+  }
+  
+  @media (prefers-color-scheme: light) {
+    body { background:  #ddd; color: black; }
+  }
+  .input-hidden {
+    position: absolute;
+    left: -9999px;
+  }
+  
+  input[type=radio]:checked + label>img {
+    border: 1px solid #fff;
+    box-shadow: 0 0 3px 3px #090;
+
+  }
+  input[type=radio] + label>img {
+    border: 1px dashed #444;
+    width: 100px;
+    height: 100px;
+    transition: 500ms all;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  button {
+    outline-style: none;
+    margin-top: 20px;
+    bottom: 2;
+    border:none;
+    transition-duration: 0.4s;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 12px;
+    background-color: white;
+  }
+  
+  button:hover {
+    background-color: gray; 
+    color: black;
+  }
+
+body{
+  -webkit-touch-callout: none; 
+  -webkit-user-select: none; 
+  -khtml-user-select: none; 
+  -moz-user-select: none; 
+  -ms-user-select: none; 
+   user-select: none; 
+}  

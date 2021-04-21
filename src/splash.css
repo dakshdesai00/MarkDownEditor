@@ -1,0 +1,46 @@
+
+body{
+	background-color: black;
+	-webkit-touch-callout: none; 
+	-webkit-user-select: none; 
+	-khtml-user-select: none; 
+	-moz-user-select: none; 
+	-ms-user-select: none; 
+	 user-select: none; 
+  }  
+
+.container{
+	width: 40px;
+    position: fixed;
+    top: 132.5px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin:auto;
+
+}
+@media (prefers-color-scheme: dark) {
+	body { background:  #333; color: white; }
+  }
+  
+  @media (prefers-color-scheme: light) {
+	body { background:  #ddd; color: black; }
+  }
+
+
+.box{
+	width: 15px;
+	height: 15px;
+	background-color: #008cbc;
+	display: inline-block;
+	animation: pulse 0.6s ease-in infinite alternate;
+}
+.box2, .box3{
+	animation-delay: 0.6s;
+}
+
+@Keyframes pulse{
+	100%{
+		opacity: 0;
+	}
+}

@@ -1,0 +1,16 @@
+h1{
+    color:red;
+    font-size: 2 rem;
+}
+.ans{
+    color:aqua;
+}
+.reason{
+    border: 2px solid lightgrey;
+    padding: 20px;
+    background-color: lightgray;
+    border-radius: 10px;
+}
+body{
+    background:  #333;
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>MarkDown Editor(Daksh Desai)</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <style type="text/css" media="screen">
+      #editor { 
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+      }
+  </style>
+    <script src='./main.js' ></script>
+    <link rel="stylesheet" href="index.css">
+    <script src="../node_modules/marked/marked.min.js" ></script>
+  </head>
+  <body id="body"  >
+    <div id="mainBody" class="row no-gutters">
+      <div class="col">
+        <div id="editor" class="editor" ></div>
+        
+      </div>
+      <div id="preview" class="col">
+        <div id="preview2" class="preview" >
+          
+        </div>
+      </div>
+     
+    </div>
+    
+    <div id="welcome" class="welcome" >
+      <img src="./icon.png" alt="" class="center">
+      <p style="text-align: center;" >Start Editing with MarkDown Editor</p>
+      <p style="text-align: center;" >Create new file or open existing file.</p>
+    </div>
+    
+    <script src="editor/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      var markdownpdf = require("markdown-pdf")
+      let shell = require('electron').shell
+      document.addEventListener('click', function (event) {
+        if (event.target.tagName === 'A' && event.target.href.startsWith('http')) {
+          event.preventDefault()
+          shell.openExternal(event.target.href)
+        }
+      })
+      var FilePath
+      var data3
+      var fs2 = require("fs")
+      var x = window.matchMedia("(prefers-color-scheme: dark)")
+      var editor=ace.edit("editor");
+          editor.session.setMode("ace/mode/markdown");
+          editor.setOptions({
+            fontSize: "1rem"
+          });
+      myFunction(x)
+      x.addListener(myFunction)
+      function myFunction(x) {
+        
+        if (x.matches) { 
+          window.editor.setTheme("ace/theme/twilight")
+        } else {
+          window.editor.setTheme("ace/theme/clouds")
+        }
+      }
+      function readMain(Filepath){
+        window.FilePath=Filepath
+        titlePage = path.basename(Filepath)
+        
+        document.title = `${titlePage}-MarkDown Editor(Daksh Desai)`;
+        ipcRenderer.send("updateTitle")
+        ipcRenderer.send("updateMenuBar")
+        fs2.readFile(Filepath,"utf-8",(err1,data2)=>{
+        if(err1){
+            console.log(err1)
+            return
+        }
+        console.log(data2)
+        editor.getSession().setValue(data2)
+        data3 =data2
+        document.getElementById("preview2").innerHTML =
+        marked(data2);
+    })
+      }
+      var textarea = document.getElementById("editor")
+        textarea.addEventListener("keyup",function(){
+        var myCode2 = editor.getSession().getValue();
+        saveAndShowPreview(myCode2)
+        document.getElementById("preview2").innerHTML =
+        marked(myCode2);
+        console.log(document.getElementById("preview2").innerHTML =marked(myCode2))
+      })
+      ipcRenderer.on("saveAs",function(){
+        var myCode2 = editor.getSession().getValue();
+          let options = {
+            title: "Save MarkDown File",
+            buttonLabel : "Save MarkDown File",
+            filters :[
+            {name: 'MarkDown', extensions: ["md"]}
+            ]
+            }
+        filename = dialog.showSaveDialog(options).then(result => {
+              filename = result.filePath;
+              if (filename.substring(filename.lastIndexOf('.') + 1)!="md") {
+                return;
+              }
+              fs.writeFile(filename, myCode2, (err) => {
+                if (err) {
+                  alert('Error occurred in file creation!');
+                  return
+                }
+                
+              })
+            })
+      })
+      ipcRenderer.on("saveAsHtml",function(){
+        var myCode2 = editor.getSession().getValue();
+        var mainData2 = document.getElementById("preview2").innerHTML =marked(myCode2)
+          let options = {
+            title: "Export MarkDown File To HTML",
+            buttonLabel : "Export",
+            filters :[
+            {name: 'HTML', extensions: ["html"]}
+            ]
+            }
+            var mainData3 = `
+            <!DOCTYPE html>
+              <html lang="en">
+              <head>
+                  <meta charset="UTF-8">
+                  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>Document</title>
+              </head>
+              <body>
+                  ${mainData2}
+              </body>
+              </html>
+            `
+        filename = dialog.showSaveDialog(options).then(result => {
+              filename = result.filePath;
+              if (filename.substring(filename.lastIndexOf('.') + 1)!="html") {
+                return;
+              }
+              fs.writeFile(filename, mainData3, (err) => {
+                if (err) {
+                  alert('Error occurred in file creation!');
+                  return
+                }
+                
+              })
+            })
+      })
+      ipcRenderer.on("saveAsPdf",function(){
+        let options = {
+            title: "Export As PDF",
+            buttonLabel : "Export",
+            filters :[
+            {name: 'Pdf', extensions: ["pdf"]}
+            ]
+            }
+        filename = dialog.showSaveDialog(options).then(result => {
+              filename = result.filePath;
+              if (filename.substring(filename.lastIndexOf('.') + 1)!="pdf") {
+                return;
+              }
+              markdownpdf().from(FilePath).to(result.filePath, function () {
+                return;
+              })
+            })
+
+      })
+
+      
+
+    </script>
+  </body>
+</html>
